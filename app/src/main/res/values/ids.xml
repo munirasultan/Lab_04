@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="showLocationButton" type="id" />
+    <item name="locationTextView" type="id" />
+    <item name="map" type="id" />
+    <item name="mapsFragmentContainer" type="id" />
+</resources>

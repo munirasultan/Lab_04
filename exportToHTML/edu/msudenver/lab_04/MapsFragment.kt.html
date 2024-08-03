@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>MapsFragment.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MapsFragment.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">edu</span><span class="s2">.</span><span class="s1">msudenver</span><span class="s2">.</span><span class="s1">lab_04</span>
+
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">SuppressLint</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">pm</span><span class="s2">.</span><span class="s1">PackageManager</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">Location</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">os</span><span class="s2">.</span><span class="s1">Bundle</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">LayoutInflater</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">View</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">ViewGroup</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">widget</span><span class="s2">.</span><span class="s1">Button</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">activity</span><span class="s2">.</span><span class="s1">result</span><span class="s2">.</span><span class="s1">ActivityResultLauncher</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">activity</span><span class="s2">.</span><span class="s1">result</span><span class="s2">.</span><span class="s1">contract</span><span class="s2">.</span><span class="s1">ActivityResultContracts</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">appcompat</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">AlertDialog</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">ContextCompat</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">fragment</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">Fragment</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">fragment</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">activityViewModels</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">LocationServices</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">Priority</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">CameraUpdateFactory</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">GoogleMap</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">OnMapReadyCallback</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">SupportMapFragment</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">LatLng</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">MarkerOptions</span>
+
+<span class="s0">class </span><span class="s1">MapsFragment : Fragment</span><span class="s2">(), </span><span class="s1">OnMapReadyCallback </span><span class="s2">{</span>
+
+    <span class="s1">private lateinit </span><span class="s0">var </span><span class="s1">mMap: GoogleMap</span>
+    <span class="s1">private lateinit </span><span class="s0">var </span><span class="s1">binding: FragmentMapsBinding</span>
+    <span class="s1">private lateinit </span><span class="s0">var </span><span class="s1">requestPermissionLauncher: ActivityResultLauncher</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">&gt;</span>
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">fusedLocationProviderClient by lazy </span><span class="s2">{</span>
+        <span class="s1">LocationServices</span><span class="s2">.</span><span class="s1">getFusedLocationProviderClient</span><span class="s2">(</span><span class="s1">requireContext</span><span class="s2">())</span>
+    <span class="s2">}</span>
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">sharedViewModel: SharedParkingViewModel by activityViewModels</span><span class="s2">()</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onCreateView</span><span class="s2">(</span>
+        <span class="s1">inflater: LayoutInflater</span><span class="s2">, </span><span class="s1">container: ViewGroup?</span><span class="s2">,</span>
+        <span class="s1">savedInstanceState: Bundle?</span>
+    <span class="s2">)</span><span class="s1">: View? </span><span class="s2">{</span>
+        <span class="s1">binding </span><span class="s2">= </span><span class="s1">FragmentMapsBinding</span><span class="s2">.</span><span class="s1">inflate</span><span class="s2">(</span><span class="s1">inflater</span><span class="s2">, </span><span class="s1">container</span><span class="s2">, </span><span class="s0">false</span><span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">binding</span><span class="s2">.</span><span class="s1">root</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onViewCreated</span><span class="s2">(</span><span class="s1">view: View</span><span class="s2">, </span><span class="s1">savedInstanceState: Bundle?</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">onViewCreated</span><span class="s2">(</span><span class="s1">view</span><span class="s2">, </span><span class="s1">savedInstanceState</span><span class="s2">)</span>
+
+        <span class="s0">val </span><span class="s1">mapFragment </span><span class="s2">= </span><span class="s1">childFragmentManager</span><span class="s2">.</span><span class="s1">findFragmentById</span><span class="s2">(</span><span class="s1">R</span><span class="s2">.</span><span class="s1">id</span><span class="s2">.</span><span class="s1">map</span><span class="s2">) </span><span class="s0">as </span><span class="s1">SupportMapFragment</span>
+        <span class="s1">mapFragment</span><span class="s2">.</span><span class="s1">getMapAsync</span><span class="s2">(</span><span class="s0">this</span><span class="s2">)</span>
+
+        <span class="s1">requestPermissionLauncher </span><span class="s2">=</span>
+            <span class="s1">registerForActivityResult</span><span class="s2">(</span><span class="s1">ActivityResultContracts</span><span class="s2">.</span><span class="s1">RequestPermission</span><span class="s2">()) { </span><span class="s1">isGranted </span><span class="s2">-&gt;</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">isGranted</span><span class="s2">) {</span>
+                    <span class="s1">getLastLocation</span><span class="s2">()</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">shouldShowRequestPermissionRationale</span><span class="s2">(</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">)) {</span>
+                        <span class="s1">showPermissionRationale </span><span class="s2">{</span>
+                            <span class="s1">requestPermissionLauncher</span><span class="s2">.</span><span class="s1">launch</span><span class="s2">(</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">)</span>
+                        <span class="s2">}</span>
+                    <span class="s2">}</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+
+        <span class="s1">binding</span><span class="s2">.</span><span class="s1">btnParkedHere</span><span class="s2">.</span><span class="s1">setOnClickListener </span><span class="s2">{</span>
+            <span class="s1">getLastLocation</span><span class="s2">()</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">hasLocationPermission</span><span class="s2">() =</span>
+        <span class="s1">ContextCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span>
+            <span class="s1">requireContext</span><span class="s2">(),</span>
+            <span class="s1">ACCESS_FINE_LOCATION</span>
+        <span class="s2">) == </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onMapReady</span><span class="s2">(</span><span class="s1">googleMap: GoogleMap</span><span class="s2">) {</span>
+        <span class="s1">mMap </span><span class="s2">= </span><span class="s1">googleMap</span>
+        <span class="s0">when </span><span class="s2">{</span>
+            <span class="s1">hasLocationPermission</span><span class="s2">() -&gt; </span><span class="s1">getLastLocation</span><span class="s2">()</span>
+            <span class="s1">shouldShowRequestPermissionRationale</span><span class="s2">(</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">) -&gt; {</span>
+                <span class="s1">showPermissionRationale </span><span class="s2">{</span>
+                    <span class="s1">requestPermissionLauncher</span><span class="s2">.</span><span class="s1">launch</span><span class="s2">(</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">)</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s0">else </span><span class="s2">-&gt; </span><span class="s1">requestPermissionLauncher</span><span class="s2">.</span><span class="s1">launch</span><span class="s2">(</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">)</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@SuppressLint</span><span class="s2">(</span><span class="s3">&quot;MissingPermission&quot;</span><span class="s2">)</span>
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">getLastLocation</span><span class="s2">() {</span>
+        <span class="s1">fusedLocationProviderClient</span><span class="s2">.</span><span class="s1">getCurrentLocation</span><span class="s2">(</span><span class="s1">Priority</span><span class="s2">.</span><span class="s1">PRIORITY_HIGH_ACCURACY</span><span class="s2">, </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s2">.</span><span class="s1">addOnSuccessListener </span><span class="s2">{ </span><span class="s1">location: Location? </span><span class="s2">-&gt;</span>
+                <span class="s1">location?</span><span class="s2">.</span><span class="s1">let </span><span class="s2">{</span>
+                    <span class="s0">val </span><span class="s1">currentLocation </span><span class="s2">= </span><span class="s1">LatLng</span><span class="s2">(</span><span class="s1">it</span><span class="s2">.</span><span class="s1">latitude</span><span class="s2">, </span><span class="s1">it</span><span class="s2">.</span><span class="s1">longitude</span><span class="s2">)</span>
+                    <span class="s1">updateMapLocation</span><span class="s2">(</span><span class="s1">currentLocation</span><span class="s2">)</span>
+                    <span class="s1">addMarkerAtLocation</span><span class="s2">(</span><span class="s1">currentLocation</span><span class="s2">, </span><span class="s3">&quot;Current Location&quot;</span><span class="s2">)</span>
+                    <span class="s1">mMap</span><span class="s2">.</span><span class="s1">animateCamera</span><span class="s2">(</span><span class="s1">CameraUpdateFactory</span><span class="s2">.</span><span class="s1">zoomTo</span><span class="s2">(</span><span class="s4">15f</span><span class="s2">))</span>
+                    <span class="s1">sharedViewModel</span><span class="s2">.</span><span class="s1">setParkingLocation</span><span class="s2">(</span><span class="s3">&quot;Lat: </span><span class="s0">${</span><span class="s1">it</span><span class="s2">.</span><span class="s1">latitude</span><span class="s0">}</span><span class="s3">, Lng: </span><span class="s0">${</span><span class="s1">it</span><span class="s2">.</span><span class="s1">longitude</span><span class="s0">}</span><span class="s3">&quot;</span><span class="s2">)</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">showPermissionRationale</span><span class="s2">(</span><span class="s1">positiveAction: </span><span class="s2">() -&gt; </span><span class="s1">Unit</span><span class="s2">) {</span>
+        <span class="s1">AlertDialog</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">(</span><span class="s1">requireContext</span><span class="s2">())</span>
+            <span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s3">&quot;Location permission&quot;</span><span class="s2">)</span>
+            <span class="s2">.</span><span class="s1">setMessage</span><span class="s2">(</span><span class="s3">&quot;We need your permission to find your current position&quot;</span><span class="s2">)</span>
+            <span class="s2">.</span><span class="s1">setPositiveButton</span><span class="s2">(</span><span class="s1">android</span><span class="s2">.</span><span class="s1">R</span><span class="s2">.</span><span class="s1">string</span><span class="s2">.</span><span class="s1">ok</span><span class="s2">) { </span><span class="s1">_</span><span class="s2">, </span><span class="s1">_ </span><span class="s2">-&gt; </span><span class="s1">positiveAction</span><span class="s2">() }</span>
+            <span class="s2">.</span><span class="s1">setNegativeButton</span><span class="s2">(</span><span class="s1">android</span><span class="s2">.</span><span class="s1">R</span><span class="s2">.</span><span class="s1">string</span><span class="s2">.</span><span class="s1">cancel</span><span class="s2">) { </span><span class="s1">dialog</span><span class="s2">, </span><span class="s1">_ </span><span class="s2">-&gt; </span><span class="s1">dialog</span><span class="s2">.</span><span class="s1">dismiss</span><span class="s2">() }</span>
+            <span class="s2">.</span><span class="s1">create</span><span class="s2">().</span><span class="s1">show</span><span class="s2">()</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">updateMapLocation</span><span class="s2">(</span><span class="s1">location: LatLng</span><span class="s2">) {</span>
+        <span class="s1">mMap</span><span class="s2">.</span><span class="s1">moveCamera</span><span class="s2">(</span><span class="s1">CameraUpdateFactory</span><span class="s2">.</span><span class="s1">newLatLngZoom</span><span class="s2">(</span><span class="s1">location</span><span class="s2">, </span><span class="s4">15f</span><span class="s2">))</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">addMarkerAtLocation</span><span class="s2">(</span><span class="s1">location: LatLng</span><span class="s2">, </span><span class="s1">title: String</span><span class="s2">) {</span>
+        <span class="s1">mMap</span><span class="s2">.</span><span class="s1">addMarker</span><span class="s2">(</span><span class="s1">MarkerOptions</span><span class="s2">().</span><span class="s1">title</span><span class="s2">(</span><span class="s1">title</span><span class="s2">).</span><span class="s1">position</span><span class="s2">(</span><span class="s1">location</span><span class="s2">))</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
